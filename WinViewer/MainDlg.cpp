@@ -8,7 +8,6 @@
 #include "stdafx.h"
 #include "resource.h"
 
-#include "aboutdlg.h"
 #include "MainDlg.h"
 
 
