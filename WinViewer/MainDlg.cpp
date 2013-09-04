@@ -61,6 +61,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
   SetWindowPos(HWND_TOPMOST, width - w, height - h, w, h, SWP_SHOWWINDOW);
 
   SetTimer(kTimerID, kTimerInterval, 0);
+  SetTimer(kIconTimerID, kIconTimerInterval, 0);
 
 	return TRUE;
 }
@@ -68,6 +69,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 LRESULT CMainDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
   KillTimer(kTimerID);
+  KillTimer(kIconTimerID);
 
 	// unregister message filtering and idle updates
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
@@ -268,23 +270,44 @@ void CMainDlg::GetAdvancedInfo() {
 }
 
 LRESULT CMainDlg::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+  if (wParam == kIconTimerID) {
+    static int index = 0;
+    if (index == 0) {
+      HICON hIcon = AtlLoadIconImage(IDI_ICON_WINDOW8, LR_DEFAULTCOLOR,
+        ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
+      SetIcon(hIcon, TRUE);
+      HICON hIconSmall = AtlLoadIconImage(IDI_ICON_WINDOW8, LR_DEFAULTCOLOR,
+        ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
+      SetIcon(hIconSmall, FALSE);
+      index = 1;
+    } else {
+      HICON hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR,
+        ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
+      SetIcon(hIcon, TRUE);
+      HICON hIconSmall = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR,
+        ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
+      SetIcon(hIconSmall, FALSE);
+      index = 0;
+    }    
 
-  POINT pt;
-  GetCursorPos(&pt);
+  } else if (wParam == kTimerID) {
+    POINT pt;
+    GetCursorPos(&pt);
 
-  // if no movement, do not refresh the ui.
-  if (pt.x == point_.x && pt.y == point_.y)
-    return 0;
+    // if no movement, do not refresh the ui.
+    if (pt.x == point_.x && pt.y == point_.y)
+      return 0;
 
-  point_.x = pt.x;
-  point_.y = pt.y;
+    point_.x = pt.x;
+    point_.y = pt.y;
 
-  // Basic Information
-  GetBasicInfo();
+    // Basic Information
+    GetBasicInfo();
 
-  // Advanced Information
-  GetAdvancedInfo();
-
+    // Advanced Information
+    GetAdvancedInfo();
+  }
+  
   return 0;
 }
 

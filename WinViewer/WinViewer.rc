@@ -27,6 +27,7 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\windows.ico"
+IDI_ICON_WINDOW8        ICON                    "res\\windows8.ico"
 #endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 

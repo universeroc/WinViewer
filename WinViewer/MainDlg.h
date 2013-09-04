@@ -34,6 +34,9 @@ private:
   static const int kTimerID = 1000;
   static const int kTimerInterval = 100;
 
+  static const int kIconTimerID = 1001;
+  static const int kIconTimerInterval = 500;
+
   POINT point_; // store a prev point to determine whether need to refresh ui.
 
   void GetBasicInfo();
